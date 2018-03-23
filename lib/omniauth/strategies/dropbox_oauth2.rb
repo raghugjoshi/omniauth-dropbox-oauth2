@@ -5,17 +5,17 @@ module OmniAuth
     class DropboxOauth2 < OmniAuth::Strategies::OAuth2
       option :name, "dropbox_oauth2"
       option :client_options, {
-        :site               => 'https://api.dropbox.com',
+        :site               => 'https://api.dropboxapi.com',
         :authorize_url      => 'https://www.dropbox.com/oauth2/authorize',
-        :token_url          => 'https://api.dropbox.com/oauth2/token'
+        :token_url          => 'https://api.dropboxapi.com/oauth2/token'
       }
 
       uid { raw_info['uid'] }
 
       info do
         {
-          'uid'   => raw_info['account_id'],
-          'name'  => raw_info['name']['display_name'],
+          'uid'   => raw_info['uid'],
+          'name'  => raw_info['display_name'],
           'email' => raw_info['email']
         }
       end
@@ -25,7 +25,7 @@ module OmniAuth
       end
 
       def raw_info
-        conn = Faraday.new(:url => 'https://api.dropbox.com') do |faraday|
+        conn = Faraday.new(:url => 'https://api.dropboxapi.com') do |faraday|
           faraday.request  :url_encoded             # form-encode POST params
           faraday.response :logger                  # log requests to STDOUT
           faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
